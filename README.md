@@ -27,6 +27,10 @@
 
 ## Project setup
 
+```env
+set env`s
+```
+
 ```bash
 $ npm install
 ```
