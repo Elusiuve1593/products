@@ -25,18 +25,26 @@ export class ProductService {
   }
 
   async findAll(): Promise<string | undefined> {
-    const products: Product[] = await this.prisma.product.findMany();
+    try {
+      const products: Product[] = await this.prisma.product.findMany();
 
-    if (!products) throw new NotFoundException('Products not found');
+      if (!products) throw new NotFoundException('Products not found');
 
-    const prompt = `В мене є такі товари: ${products
-      .map(({ name, description, quantity }: Product) => {
-        return `${name} - ${description} - ${quantity}`;
-      })
-      .join(
-        ',',
-      )}. Напиши опис які товари саме доступні та привабливо для перспективи покупки. Коротко і зрозуміло. Українською`;
+      const prompt = `В мене є такі товари: ${products
+        .map(({ name, description, quantity }: Product) => {
+          return `${name} - ${description} - ${quantity}`;
+        })
+        .join(
+          ',',
+        )}. Напиши опис які товари саме доступні та привабливо для перспективи покупки. Коротко і зрозуміло. Українською`;
 
-    return await this.geminiService.generateText(prompt);
+      return await this.geminiService.generateText(prompt);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        error instanceof Error
+          ? error.message
+          : 'Unknown error while getting products',
+      );
+    }
   }
 }
