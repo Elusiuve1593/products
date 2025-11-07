@@ -6,4 +6,4 @@ import { ProductModule } from './product/product.module';
   providers: [PrismaService],
   imports: [ProductModule],
 })
-export class AppModule { }
+export class AppModule {}
